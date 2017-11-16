@@ -1,1 +1,5 @@
-测试eclipse上的git操作
+
+=====>
+	1、测试eclipse上的git操作;
+	2、spring+spring mvc+mybatis框架的搭载;
+	
