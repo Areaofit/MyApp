@@ -1,4 +1,4 @@
-package com.areaofit.gittest.test;
+package com.areaofit.app.test;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
