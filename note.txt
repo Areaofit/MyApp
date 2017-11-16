@@ -1,5 +1,5 @@
-
-=====>
-	1、测试eclipse上的git操作;
-	2、spring+spring mvc+mybatis框架的搭载;
-	
+一、目的：
+	1、测试eclipse上的git操作；
+	2、spring+spring mvc+mybatis框架的搭载；
+	3、多数据源的一些配置；
+	4、常见方法的写法；
