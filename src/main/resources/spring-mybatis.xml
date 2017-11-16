@@ -8,20 +8,48 @@
 	<!-- 如果扫描到文件中带有 @Service,@Component,@Repository,@Controller等这些注解的类，则把这些类注册为bean -->
 	<!-- 如果配置了<context:component-scan>那么<context:annotation-config/>标签就可以不用在xml中再配置了，因为前者包含了后者 -->
 	<context:component-scan base-package="com.areaofit"></context:component-scan>
-	
-	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+
+	<!-- 引入配置文件 -->
+	<bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="location" value="classpath:jdbc.properties"></property>
 	</bean>
-	
+
+	<!-- 配置数据源，基于alibaba的druid -->
 	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
 		<property name="driverClassName" value="${jdbc.driver}"></property>
 		<property name="url" value="${jdbc.url}"></property>
-		<property name="username" value="${jdbc.name}"/>
-        <property name="password" value="${jdbc.password}"/>
-        <!-- 配置初始化大小、最小、最大 -->
-        <property name="initialSize" value="${jdbc.initPoolSize}"/>
-        <property name="minIdle" value="${jdbc.minPoolSize}"/>
-        <property name="maxActive" value="${jdbc.maxPoolSize}"/>
+		<property name="username" value="${jdbc.name}" />
+		<property name="password" value="${jdbc.password}" />
+		<!-- 配置初始化大小、最小、最大 -->
+		<property name="initialSize" value="${jdbc.initPoolSize}" />
+		<property name="minIdle" value="${jdbc.minPoolSize}" />
+		<property name="maxActive" value="${jdbc.maxPoolSize}" />
+	</bean>
+
+	<!-- spring与mybatis的配置，不需要mybatis的配置映射文件 -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<!-- 引入数据源 -->
+		<property name="dataSource" ref="dataSource"></property>
+		<!-- 为 pojo 简化包名 -->
+		<property name="typeAliasesPackage" value="com.areaofit.app.model" />
+		<!-- 自动扫描mapping.xml文件 -->
+		<property name="mapperLocations" value="classpath:com/areaofit/app/dao/mapping/*.xml"></property>
 	</bean>
 	
+	<!-- MapperScannerConfigurer 自动扫描将Mapper接口生成代理注入到Spring -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<!-- basePackage 属性是让你为映射器接口文件设置基本的包路径 -->
+		<!-- 可以使用分号或逗号 作为分隔符设置多于一个的包路径 -->
+		<!-- 每个映射器将会在指定的包路径中递归地被搜索到 -->
+		<property name="basePackage" value="com.areaofit.app.dao"></property>
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+	</bean>
+	
+	<!-- 开启事物 -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<!-- 在spring配置文件里面,value配置的参数,一般是用在数字,字符串之类的,而不能放对象.而ref是存的是对象的引用 -->
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+
 </beans>
