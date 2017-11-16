@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+
+	<!-- 配置完这个标签后，spring就会去自动扫描base-package对应的路径或者该路径的子包下面的java文件 -->
+	<!-- 如果扫描到文件中带有 @Service,@Component,@Repository,@Controller等这些注解的类，则把这些类注册为bean -->
+	<!-- 如果配置了<context:component-scan>那么<context:annotation-config/>标签就可以不用在xml中再配置了，因为前者包含了后者 -->
+	<context:component-scan base-package="com.areaofit"></context:component-scan>
+	
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location" value="classpath:jdbc.properties"></property>
+	</bean>
+	
+	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+		<property name="driverClassName" value="${jdbc.driver}"></property>
+		<property name="url" value="${jdbc.url}"></property>
+		<property name="username" value="${jdbc.name}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <!-- 配置初始化大小、最小、最大 -->
+        <property name="initialSize" value="${jdbc.initPoolSize}"/>
+        <property name="minIdle" value="${jdbc.minPoolSize}"/>
+        <property name="maxActive" value="${jdbc.maxPoolSize}"/>
+	</bean>
+	
+</beans>
