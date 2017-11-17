@@ -2,7 +2,9 @@ package com.areaofit.app.utils;
 
 /**
  * 
- * 这个工具类是判断一个请求是否是一个移动端发出的
+ * @Description 这个工具类是判断一个请求是否是一个移动端发出的
+ * @Author Huangjinwen
+ * @Date 2017年11月17日-下午2:50:10
  * 
  * The DetectSmartPhone class encapsulates information about
  * a browser's connection to your web site.
