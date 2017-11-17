@@ -25,6 +25,11 @@ import com.areaofit.app.utils.ValidateCode;
 @RequestMapping("/common")
 public class ValidateCodeController {
 
+	/**
+	 * 使用示例
+	 * @param request
+	 * @param response
+	 */
 	@RequestMapping("/validateCode")
 	public void validateCode(HttpServletRequest request, HttpServletResponse response) {
 		// 设置不缓存图片
