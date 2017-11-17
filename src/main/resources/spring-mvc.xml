@@ -30,7 +30,7 @@
 		</property>
 	</bean>
 
-	<!-- 定义跳转的文件的前后缀 ，视图模式配置-->
+	<!-- 这是一个最常用的解析器,通常使用它指定渲染对象为jsp页面 -->
 	<bean
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="prefix" value="/WEB-INF/jsp/"></property>
