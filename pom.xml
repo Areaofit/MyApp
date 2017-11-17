@@ -127,14 +127,20 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20171018</version>
+		</dependency>
+
+		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
 			<version>4.0.0</version>
 			<scope>provided</scope>
 		</dependency>
-		
+
 	</dependencies>
-	
+
 	<build>
 		<finalName>MyApp</finalName>
 		<plugins>
