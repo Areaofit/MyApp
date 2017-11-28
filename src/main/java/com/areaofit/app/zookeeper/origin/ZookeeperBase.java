@@ -38,11 +38,11 @@ public class ZookeeperBase {
 		// 创建zookeeper实例
 		ZooKeeper zooKeeper = new ZooKeeper(CONNECTION_ADDR, SESSION_TIMEOUT, new Watcher(){
 			@Override
-			public void process(WatchedEvent evevt) {
-				// 获取事件状态
-				KeeperState keeperState = evevt.getState();
+			public void process(WatchedEvent event) {
+				// 获取连接状态
+				KeeperState keeperState = event.getState();
 				// 获取事件类型
-				EventType eventType = evevt.getType();
+				EventType eventType = event.getType();
 				// 判断是否连接上
 				if (keeperState == KeeperState.SyncConnected) {
 					if (eventType == EventType.None) {
