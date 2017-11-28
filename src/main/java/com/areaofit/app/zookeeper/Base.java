@@ -12,7 +12,7 @@ import org.apache.zookeeper.ZooKeeper;
 
 /**
  * 
- * @Description zookeeper的基本操作
+ * @Description zookeeper的基本操作--基于原生zookeeper的api
  * @Author Huangjinwen
  * @Date 2017年11月28日-下午4:34:26
  */
@@ -71,10 +71,12 @@ public class Base {
 		
 		// 删除节点
 		zooKeeper.delete("/Test", -1);
+		// 判断是否存在该节点
+		System.out.println(zooKeeper.exists("/Test", false));
 		
 		// 创建父节点
 		zooKeeper.create("/Parent", null, Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
-		// 创建子节点
+		// 创建子节点，只能一级一级的创建子节点，zookeeper原生api不支持递归创建
 		zooKeeper.create("/Parent/Child", "子节点内容".getBytes(), Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
 		result = zooKeeper.getData("/Parent/Child", false, null);
 		System.out.println("子节点的内容为-------> " + new String(result));
