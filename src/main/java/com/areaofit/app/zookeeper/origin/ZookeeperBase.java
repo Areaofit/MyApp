@@ -1,4 +1,4 @@
-package com.areaofit.app.zookeeper;
+package com.areaofit.app.zookeeper.origin;
 
 import java.util.concurrent.CountDownLatch;
 
