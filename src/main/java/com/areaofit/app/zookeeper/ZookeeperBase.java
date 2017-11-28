@@ -16,7 +16,7 @@ import org.apache.zookeeper.ZooKeeper;
  * @Author Huangjinwen
  * @Date 2017年11月28日-下午4:34:26
  */
-public class Base {
+public class ZookeeperBase {
 	
 	/**
 	 * zookeeper通信地址
