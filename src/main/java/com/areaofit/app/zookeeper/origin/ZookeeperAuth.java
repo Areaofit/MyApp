@@ -145,7 +145,7 @@ public class ZookeeperAuth implements Watcher {
 	 * 不使用认证信息获取节点的数据
 	 */
 	public static void getDataByNoAuthen() {
-		String prefix = "【不使用的授权信息】";
+		String prefix = "【不使用授权信息】";
 		try {
 			ZooKeeper zooKeeper2 = new ZooKeeper(ZookeeperBase.CONNECTION_ADDR, ZookeeperBase.SESSION_TIMEOUT, null);
 			Thread.sleep(200);
@@ -156,9 +156,112 @@ public class ZookeeperAuth implements Watcher {
 		}
 	}
 	
+	/**
+	 * 使用正取认证信息更新节点数据
+	 */
+	public static void setDataByCorrectAuthen() {
+		String prefix = "【使用正确的授权信息】";
+		System.out.println(prefix+"更新数据"+TEST_PATH);
+		try {
+			if (zooKeeper.exists(TEST_PATH, null) != null) {
+				zooKeeper.setData(TEST_PATH, "change data".getBytes(), -1);
+				System.out.println(prefix+"更新数据成功");
+			}
+		} catch (Exception e) {
+			System.err.println(prefix + "更新数据失败，原因：" + e.getMessage());
+		}
+	}
 	
+	/**
+	 * 使用错误认证信息更新节点数据
+	 */
+	public static void setDataByErrorAuthen() {
+		String prefix = "【使用错误的授权信息】";
+		System.out.println(prefix+"更新数据"+TEST_PATH);
+		try {
+			ZooKeeper zooKeeper3 = new ZooKeeper(ZookeeperBase.CONNECTION_ADDR, ZookeeperBase.SESSION_TIMEOUT, null);
+			zooKeeper3.addAuthInfo(AUTHEN_TYPE, ERROR_AUTHEN_PASS.getBytes());
+			Thread.sleep(200);
+			if (zooKeeper3.exists(TEST_PATH, false) != null) {
+				zooKeeper3.setData(TEST_PATH, "change data".getBytes(), -1);
+				System.out.println(prefix+"更新数据成功");
+			}
+		} catch (Exception e) {
+			System.err.println(prefix + "更新数据失败，原因：" + e.getMessage());
+		}
+	}
 	
-
+	/**
+	 * 不使用认证信息更新节点的数据
+	 */
+	public static void setDataByNoAuthen() {
+		String prefix = "【不使用授权信息】";
+		System.out.println(prefix+"更新数据"+TEST_PATH);
+		try {
+			ZooKeeper zooKeeper4 = new ZooKeeper(ZookeeperBase.CONNECTION_ADDR, ZookeeperBase.SESSION_TIMEOUT, null);
+			Thread.sleep(200);
+			if (zooKeeper4.exists(TEST_PATH, false) != null) {
+				zooKeeper4.setData(TEST_PATH, "change data".getBytes(), -1);
+				System.out.println(prefix+"更新数据成功");
+			}
+		} catch (Exception e) {
+			System.err.println(prefix + "更新数据失败，原因：" + e.getMessage());
+		}
+	}
+	
+	/**
+	 * 使用正取认证信息删除节点
+	 */
+	public static void deleteNodeByCorrectAuthen() {
+		String prefix = "【使用正确的授权信息】";
+		System.out.println(prefix+"删除节点"+TEST_DELETE_PATH);
+		try {
+			if (zooKeeper.exists(TEST_DELETE_PATH, false) != null) {
+				zooKeeper.delete(TEST_DELETE_PATH, -1);
+				zooKeeper.delete(TEST_PATH, -1);
+				System.out.println(prefix+"删除节点成功");
+			}
+		} catch (Exception e) {
+			System.err.println(prefix + "删除节点失败，原因：" + e.getMessage());
+		}
+		
+	}
+	
+	/**
+	 * 使用错误认证信息删除节点
+	 */
+	public static void deleteNodeByErrorAuthen() {
+		String prefix = "【使用错误的授权信息】";
+		System.out.println(prefix+"删除节点"+TEST_DELETE_PATH);
+		try {
+			ZooKeeper zooKeeper5 = new ZooKeeper(ZookeeperBase.CONNECTION_ADDR,ZookeeperBase.SESSION_TIMEOUT,null);
+			zooKeeper5.addAuthInfo(AUTHEN_TYPE, ERROR_AUTHEN_PASS.getBytes());
+			if (zooKeeper5.exists(TEST_DELETE_PATH, false) != null) {
+				zooKeeper5.delete(TEST_DELETE_PATH, -1);
+				System.out.println(prefix+"删除节点成功");
+			}
+		} catch (Exception e) {
+			System.err.println(prefix + "删除节点失败，原因：" + e.getMessage());
+		}
+	}
+	
+	/**
+	 * 不使用认证信息删除节点
+	 */
+	public static void deleteNodeByNoAuthen() {
+		String prefix = "【不使用授权信息】";
+		System.out.println(prefix+"删除节点"+TEST_DELETE_PATH);
+		try {
+			ZooKeeper zooKeeper6 = new ZooKeeper(ZookeeperBase.CONNECTION_ADDR,ZookeeperBase.SESSION_TIMEOUT,null);
+			if (zooKeeper6.exists(TEST_DELETE_PATH, false) != null) {
+				zooKeeper6.delete(TEST_DELETE_PATH, -1);
+				System.out.println(prefix+"删除节点成功");
+			}
+		} catch (Exception e) {
+			System.err.println(prefix + "删除节点失败，原因：" + e.getMessage());
+		}
+	}
+	
 	public static void main(String[] args) {
 		ZookeeperAuth zookeeperAuth = new ZookeeperAuth();
 		zookeeperAuth.connection(ZookeeperBase.CONNECTION_ADDR, ZookeeperBase.SESSION_TIMEOUT);
@@ -176,5 +279,19 @@ public class ZookeeperAuth implements Watcher {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		
+		getDataByErrorAuthen();
+		getDataByNoAuthen();
+		getDataByCorrectAuthen();
+		
+		setDataByErrorAuthen();
+		setDataByNoAuthen();
+		setDataByCorrectAuthen();
+		
+		deleteNodeByErrorAuthen();
+		deleteNodeByNoAuthen();
+		deleteNodeByCorrectAuthen();
+		
+		zookeeperAuth.disConnection();
 	}
 }

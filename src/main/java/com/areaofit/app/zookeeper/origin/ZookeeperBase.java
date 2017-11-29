@@ -21,7 +21,7 @@ public class ZookeeperBase {
 	/**
 	 * zookeeper通信地址
 	 */
-	public static final String CONNECTION_ADDR = "";
+	public static final String CONNECTION_ADDR = "192.168.254.211:2181,192.168.254.212:2181,192.168.254.213:2181";
 	
 	/**
 	 * session超时
@@ -59,6 +59,7 @@ public class ZookeeperBase {
 		// 创建节点
 		String firstNode = zooKeeper.create("/Test", "第一个节点".getBytes(), Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
 		System.out.println("新建的节点为-------> " + firstNode);
+		System.out.println(zooKeeper.exists("/Test", false));
 		
 		// 获取节点的内容
 		byte[] result = zooKeeper.getData("/Test", false, null);
@@ -68,6 +69,7 @@ public class ZookeeperBase {
 		zooKeeper.setData("/Test", "修改第一个节点的内容".getBytes(), -1);
 		result = zooKeeper.getData("/Test", false, null);
 		System.out.println("修改的内容为-------> " + new String(result));
+		System.out.println(zooKeeper.exists("/Test", false));
 		
 		// 删除节点
 		zooKeeper.delete("/Test", -1);
@@ -80,6 +82,9 @@ public class ZookeeperBase {
 		zooKeeper.create("/Parent/Child", "子节点内容".getBytes(), Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
 		result = zooKeeper.getData("/Parent/Child", false, null);
 		System.out.println("子节点的内容为-------> " + new String(result));
+		
+		zooKeeper.delete("/Parent/Child", -1);
+		zooKeeper.delete("/Parent", -1);
 		
 		// 关闭连接
 		zooKeeper.close();
