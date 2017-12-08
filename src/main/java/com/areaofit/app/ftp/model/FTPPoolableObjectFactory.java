@@ -9,7 +9,7 @@ import org.apache.log4j.Logger;
 
 /**
  * 
- * @Description TODO
+ * @Description 池对象工厂
  * @Author Huangjinwen
  * @Date 2017年12月8日-上午11:39:40
  */
@@ -52,7 +52,7 @@ public class FTPPoolableObjectFactory extends BasePooledObjectFactory<FTPClient>
 	}
 
 	/**
-	 * 包装FTPClient对象
+	 * 包装FTPClient对象；PooledObject池对象，被创建在池中的对象，自己可以有一些附加信息
 	 */
 	@Override
 	public PooledObject<FTPClient> wrap(FTPClient paramT) {
