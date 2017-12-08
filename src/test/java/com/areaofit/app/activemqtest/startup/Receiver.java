@@ -1,4 +1,4 @@
-package com.areaofit.app.activemqtest;
+package com.areaofit.app.activemqtest.startup;
 
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
