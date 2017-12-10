@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<!-- Spring提供的ConnectionFactory只是Spring用于管理ConnectionFactory的，
+		真正产生到JMS服务器链接的ConnectionFactory还得是由JMS服务厂商提供，
+		并且需要把它注入到Spring提供的ConnectionFactory中。
+	        我们这里使用的是ActiveMQ实现的JMS，所以在我们这里真正的可以产生Connection的就应该是由ActiveMQ提供的ConnectionFactory -->
+	        
+	          
+	<!-- ########################## producer、comsumer的共同配置  ########################## -->
+
+	<!-- 第三方MQ工厂: ConnectionFactory 真正可以产生Connection的ConnectionFactory，由对应的 JMS服务厂商提供 -->
+	<bean id="connectionFactory" class="org.apache.activemq.spring.ActiveMQConnectionFactory">
+		<property name="brokerURL" value="tcp://localhost:61616"></property>
+		<property name="userName" value="hugh"></property>
+		<property name="password" value="123456"></property>
+	</bean>
+	
+	<!-- ActiveMQ为我们提供了一个PooledConnectionFactory，通过往里面注入一个ActiveMQConnectionFactory
+    	可以用来将Connection、Session和MessageProducer池化，这样可以大大的减少我们的资源消耗,要依赖于 activemq-pool包
+     -->
+	<bean id="connectionPool" class="org.apache.activemq.jms.pool.PooledConnectionFactory">
+		<property name="connectionFactory" ref="connectionFactory"></property>
+		<property name="maxConnections" value="10"></property>
+	</bean>
+	
+	<!-- SingleConnectionFactory：对于建立JMS服务器链接的请求会一直返回同一个链接，并且会忽略Connection的close方法调用 -->
+	<!-- CachingConnectionFactory：继承了SingleConnectionFactory，所以它拥有SingleConnectionFactory的所有功能，
+		同时它还新增了缓存功能，它可以缓存Session、MessageProducer和MessageConsumer -->
+	<bean id="singleConnectionFactory" class="org.springframework.jms.connection.SingleConnectionFactory">
+		<property name="targetConnectionFactory" ref="connectionPool"></property>
+	</bean>
+	
+	<!-- provider、consumer的消息目的地 -->
+	<bean id="queue" class="org.apache.activemq.command.ActiveMQQueue">
+		<constructor-arg>
+			<value>queue1</value>
+		</constructor-arg>
+	</bean>
+	
+	
+	<!-- ########################## producer的配置  ########################## -->
+	
+	<!-- Spring提供的JMS工具类，它可以进行消息发送、接收等 -->
+	<bean id="jmsTemplateForProvider" class="org.springframework.jms.core.JmsTemplate">
+		<property name="connectionFactory" ref="singleConnectionFactory"></property>
+		<property name="defaultDestination" ref="queue"></property>
+	</bean>
+
+	
+	<!-- ########################## comsumer的配置  ########################## -->
+	
+	<!-- Spring提供的JMS工具类，它可以进行消息发送、接收等 -->
+	<bean id="jmsTemplateForConsumer" class="org.springframework.jms.core.JmsTemplate">
+		<property name="connectionFactory" ref="singleConnectionFactory"></property>
+		<property name="defaultDestination" ref="queue"></property>
+	</bean>
+	
+	<!-- 自定义消息监听器 -->
+	<bean id="messageListener" class="com.areaofit.app.listener.messageListener.MyMessageListener"></bean>
+	
+	<!-- 消息监听容器MessageListenerContainer,它负责接收信息，并把接收到的信息分发给真正的MessageListener进行处理  -->
+	<!-- 配置一个MessageListenerContainer的时候有三个属性必须指定，
+		一个是表示从哪里监听的ConnectionFactory；
+		一个是表示监听什么的Destination；
+		一个是接收到消息以后进行消息处理的MessageListener -->
+	<bean id="jmsContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="connectionFactory" ref="singleConnectionFactory"></property>
+		<property name="destination" ref="queue"></property>
+		<property name="messageListener" ref="messageListener"></property>
+	</bean>
+
+</beans>
